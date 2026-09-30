@@ -5,7 +5,7 @@ import { supabase } from "../../lib/supabaseClient";
 import AdminWalkthrough from "./AdminWalkthrough";
 
 type AdminSidebarProps = {
-  active: "overview" | "users" | "courses" | "activity" | "sop";
+  active: "overview" | "users" | "courses" | "activity" | "settings";
   fullName: string | null;
   email: string | null;
 
@@ -133,14 +133,14 @@ export default function AdminSidebar({
           <button type="button" className={itemClass("activity")} onClick={() => go("/admin/activity")}>
             Activity &amp; Progress
           </button>
-          <button type="button" className={itemClass("sop")} onClick={() => go("/admin/sop")}>
-            Admin SOP
-          </button>
         </nav>
 
         {/* Logout */}
         <div className="sidebar-footer" style={{ marginTop: "auto" }}>
           <div className="sidebar-footer-title">Account</div>
+          <button type="button" className={itemClass("settings")} onClick={() => go("/admin/settings")}>
+            Settings
+          </button>
           <button type="button" className="nav-item" onClick={hardLogout}>
             Log out
           </button>

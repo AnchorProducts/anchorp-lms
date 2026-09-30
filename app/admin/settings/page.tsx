@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "../../../lib/supabaseClient";
 import AdminSidebar from "../../components/AdminSidebar";
 import { SOP_LAST_UPDATED, SOP_SECTIONS, SopBlock } from "../../../lib/adminSop";
+import { OPEN_WALKTHROUGH_EVENT } from "../../components/AdminWalkthrough";
 
 type Profile = {
   id: string;
@@ -49,7 +50,7 @@ function SopBlockView({ block }: { block: SopBlock }) {
   );
 }
 
-export default function AdminSopPage() {
+export default function AdminSettingsPage() {
   const router = useRouter();
 
   const [adminProfile, setAdminProfile] = useState<Profile | null>(null);
@@ -110,7 +111,7 @@ export default function AdminSopPage() {
   }, [loadProfile]);
 
   if (loadingProfile) {
-    return <div style={{ padding: 24 }}>Loading admin SOP…</div>;
+    return <div style={{ padding: 24 }}>Loading settings…</div>;
   }
 
   if (!adminProfile) {
@@ -121,7 +122,7 @@ export default function AdminSopPage() {
     <div className="dashboard-root admin-root">
       {/* ✅ Sidebar (mobile dropdown capable) */}
       <AdminSidebar
-        active="sop"
+        active="settings"
         fullName={adminProfile.full_name}
         email={adminProfile.email}
         isOpen={sidebarOpen}
@@ -151,12 +152,33 @@ export default function AdminSopPage() {
           </button>
 
           <div>
-            <div className="topbar-title">Admin SOP</div>
+            <div className="topbar-title">Settings</div>
             <div className="topbar-subtitle">
-              Standard operating procedures for running Anchor Academy. Last updated{" "}
-              {SOP_LAST_UPDATED}.
+              Admin guide and standard operating procedures for Anchor Academy.
             </div>
           </div>
+        </div>
+
+        <div className="block" style={{ marginBottom: 14 }}>
+          <div className="block-header">
+            <div className="block-title">Admin walkthrough</div>
+            <button
+              type="button"
+              className="btn-primary"
+              onClick={() => window.dispatchEvent(new Event(OPEN_WALKTHROUGH_EVENT))}
+            >
+              Restart walkthrough
+            </button>
+          </div>
+          <p className="small-block-text">
+            A 2-minute, step-by-step tour of the Admin Console. You can also open it any time
+            from the Admin guide button in the bottom right corner.
+          </p>
+        </div>
+
+        <div className="block-header" id="sop" style={{ margin: "8px 0 10px" }}>
+          <div className="block-title">Admin SOP</div>
+          <div style={{ fontSize: 12, color: "#76777b" }}>Last updated {SOP_LAST_UPDATED}</div>
         </div>
 
         <div className="sop-layout">

@@ -10,6 +10,9 @@ import { WALKTHROUGH_STEPS } from "../../lib/adminSop";
 const SEEN_KEY_PREFIX = "anchorp-admin-walkthrough-seen:";
 const RESUME_KEY = "anchorp-admin-walkthrough-resume";
 
+// Dispatch this event (e.g. from Settings) to open the walkthrough from step 1.
+export const OPEN_WALKTHROUGH_EVENT = "anchorp:open-walkthrough";
+
 export default function AdminWalkthrough() {
   const router = useRouter();
   const [userId, setUserId] = useState<string | null>(null);
@@ -87,6 +90,15 @@ export default function AdminWalkthrough() {
     setOpen(false);
     router.push(href);
   };
+
+  useEffect(() => {
+    const onOpen = () => {
+      setStep(0);
+      setOpen(true);
+    };
+    window.addEventListener(OPEN_WALKTHROUGH_EVENT, onOpen);
+    return () => window.removeEventListener(OPEN_WALKTHROUGH_EVENT, onOpen);
+  }, []);
 
   // ---------- KEYBOARD + FOCUS ----------
   useEffect(() => {

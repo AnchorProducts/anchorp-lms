@@ -1,5 +1,5 @@
 // lib/adminSop.ts
-// Single source for the admin SOP: used by /admin/sop and the admin walkthrough.
+// Single source for the admin SOP: used by /admin/settings and the admin walkthrough.
 
 export type SopBlock = {
   heading?: string;
@@ -57,7 +57,7 @@ export const SOP_SECTIONS: SopSection[] = [
             text: "Create and manage courses, assign courses, open a course’s content editor.",
           },
           { label: "Activity & Progress", text: "Learner progress and completions over time." },
-          { label: "Admin SOP", text: "This guide. Reopen the walkthrough any time with the Admin guide button in the bottom right corner." },
+          { label: "Settings (under Account)", text: "This SOP, plus a button to restart the walkthrough. You can also reopen the walkthrough any time with the Admin guide button in the bottom right corner." },
         ],
       },
       {
@@ -321,7 +321,7 @@ export const WALKTHROUGH_STEPS: WalkthroughStep[] = [
       "Users & Roles: invites, roles and user search.",
       "Courses & Enrollments: courses, assignments and content.",
       "Activity & Progress: completions and active learners over time.",
-      "Admin SOP: the full written procedures.",
+      "Settings (under Account, at the bottom): the full written SOP.",
     ],
     link: { label: "Go to Overview", href: "/admin" },
   },
@@ -383,7 +383,7 @@ export const WALKTHROUGH_STEPS: WalkthroughStep[] = [
   },
   {
     title: "You’re all set",
-    body: "The full SOP, including troubleshooting and escalation steps, is always on the Admin SOP page. Reopen this walkthrough any time from the Admin guide button in the bottom right corner.",
-    link: { label: "Open the full SOP", href: "/admin/sop" },
+    body: "The full SOP, including troubleshooting and escalation steps, is always in Settings, at the bottom of the sidebar. Reopen this walkthrough any time from the Admin guide button in the bottom right corner.",
+    link: { label: "Open Settings", href: "/admin/settings" },
   },
 ];
