@@ -933,3 +933,287 @@ body {
     padding: 16px;
   }
 }
+
+/* ================================
+   ADMIN WALKTHROUGH
+   ================================ */
+.walkthrough-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px 10px 10px;
+  border: none;
+  border-radius: 999px;
+  background: #047835;
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+.walkthrough-fab:hover {
+  background: #11500f;
+}
+
+.walkthrough-fab-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #9ce2bb;
+  color: #11500f;
+  font-weight: 700;
+}
+
+.walkthrough-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(17, 24, 39, 0.45);
+}
+
+.walkthrough-dialog {
+  width: 100%;
+  max-width: 480px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  font-family: system-ui, sans-serif;
+  outline: none;
+}
+
+.walkthrough-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.walkthrough-count {
+  font-size: 0.75rem;
+  color: #76777b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.walkthrough-close {
+  border: none;
+  background: transparent;
+  color: #76777b;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.walkthrough-progress {
+  height: 4px;
+  margin: 10px 0 16px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+
+.walkthrough-progress-fill {
+  height: 100%;
+  background: #047835;
+  transition: width 0.2s ease;
+}
+
+.walkthrough-title {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #000000;
+}
+
+.walkthrough-body {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #374151;
+}
+
+.walkthrough-list {
+  margin: 0 0 12px;
+  padding-left: 18px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #374151;
+}
+
+.walkthrough-list li {
+  margin-bottom: 4px;
+}
+
+.walkthrough-link {
+  padding: 0;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.walkthrough-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .walkthrough-fab {
+    right: 16px;
+    bottom: 16px;
+    padding: 10px;
+  }
+
+  .walkthrough-fab-label {
+    display: none;
+  }
+}
+
+/* ================================
+   ADMIN SOP PAGE
+   ================================ */
+.sop-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.sop-toc {
+  position: sticky;
+  top: 16px;
+}
+
+.sop-toc a {
+  display: block;
+  padding: 6px 0;
+  font-size: 0.85rem;
+  color: #047835;
+  text-decoration: none;
+}
+
+.sop-toc a:hover {
+  text-decoration: underline;
+}
+
+.sop-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 72px; /* room for the Admin guide button */
+}
+
+.sop-section {
+  scroll-margin-top: 16px;
+}
+
+.sop-section h2 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #000000;
+}
+
+.sop-section h3 {
+  margin: 16px 0 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #11500f;
+}
+
+.sop-section p,
+.sop-section li {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: #374151;
+}
+
+.sop-section p {
+  margin: 0 0 8px;
+}
+
+.sop-section ol,
+.sop-section ul {
+  margin: 0 0 8px;
+  padding-left: 20px;
+}
+
+.sop-section li {
+  margin-bottom: 4px;
+}
+
+.sop-rows {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 4px 0 8px;
+  font-size: 0.85rem;
+}
+
+.sop-rows th,
+.sop-rows td {
+  text-align: left;
+  vertical-align: top;
+  padding: 8px 10px;
+  border-bottom: 1px solid #e5e7eb;
+  line-height: 1.45;
+}
+
+.sop-rows th {
+  width: 36%;
+  font-weight: 600;
+  color: #111827;
+}
+
+.sop-rows td {
+  color: #374151;
+}
+
+.sop-note {
+  margin: 6px 0 8px;
+  padding: 10px 12px;
+  border-left: 3px solid #047835;
+  border-radius: 8px;
+  background: #ecfdf3;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #11500f;
+}
+
+@media (max-width: 900px) {
+  .sop-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sop-toc {
+    position: static;
+  }
+
+  .sop-rows th,
+  .sop-rows td {
+    display: block;
+    width: auto;
+    padding: 4px 0;
+    border-bottom: none;
+  }
+
+  .sop-rows tr {
+    display: block;
+    padding: 8px 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+}

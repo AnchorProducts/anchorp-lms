@@ -2,9 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabaseClient";
+import AdminWalkthrough from "./AdminWalkthrough";
 
 type AdminSidebarProps = {
-  active: "overview" | "users" | "courses" | "activity";
+  active: "overview" | "users" | "courses" | "activity" | "sop";
   fullName: string | null;
   email: string | null;
 
@@ -80,6 +81,7 @@ export default function AdminSidebar({
   };
 
   return (
+    <>
     <div className={`admin-sidebar ${isOpen ? "admin-sidebar-open" : ""}`}>
       <aside className="sidebar">
         {/* ✕ Close button (mobile only) */}
@@ -131,6 +133,9 @@ export default function AdminSidebar({
           <button type="button" className={itemClass("activity")} onClick={() => go("/admin/activity")}>
             Activity &amp; Progress
           </button>
+          <button type="button" className={itemClass("sop")} onClick={() => go("/admin/sop")}>
+            Admin SOP
+          </button>
         </nav>
 
         {/* Logout */}
@@ -142,5 +147,9 @@ export default function AdminSidebar({
         </div>
       </aside>
     </div>
+
+    {/* First-login walkthrough + "Admin guide" button (bottom right) */}
+    <AdminWalkthrough />
+    </>
   );
 }
