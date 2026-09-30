@@ -18,6 +18,23 @@ type Enrollment = {
   courses: Course;
 };
 
+type AssignedLesson = {
+  id: string;
+  lesson_id: string;
+  title: string;
+  course_title: string | null;
+  completed: boolean;
+};
+
+type AssignmentRow = {
+  id: string;
+  lesson_id: string;
+  lessons: {
+    title: string | null;
+    modules: { courses: { title: string | null } | null } | null;
+  } | null;
+};
+
 type Profile = {
   id: string;
   full_name: string | null;
@@ -37,6 +54,7 @@ export default function DashboardPage() {
   const [lessonsCompleted, setLessonsCompleted] = useState(0);
   const [progressByCourse, setProgressByCourse] = useState<Record<string, number>>({});
   const [certificatesCount, setCertificatesCount] = useState(0);
+  const [assignedLessons, setAssignedLessons] = useState<AssignedLesson[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   // ✅ mobile sidebar
@@ -177,6 +195,29 @@ export default function DashboardPage() {
       .map((lp: any) => lp.lesson_id);
 
     setLessonsCompleted(completedLessonIds.length);
+
+    // Lessons assigned directly to this user by an admin
+    const { data: assignmentRows, error: assignmentsError } = await supabase
+      .from("lesson_assignments")
+      .select("id, lesson_id, created_at, lessons(title, modules(courses(title)))")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (assignmentsError) {
+      console.warn("lesson_assignments query failed:", assignmentsError);
+      setAssignedLessons([]);
+    } else {
+      const completedLessonSet = new Set(completedLessonIds);
+      setAssignedLessons(
+        ((assignmentRows || []) as unknown as AssignmentRow[]).map((a) => ({
+          id: a.id,
+          lesson_id: a.lesson_id,
+          title: a.lessons?.title ?? "Lesson",
+          course_title: a.lessons?.modules?.courses?.title ?? null,
+          completed: completedLessonSet.has(a.lesson_id),
+        }))
+      );
+    }
 
     // Per-course progress
     let progressMap: Record<string, number> = {};
@@ -398,6 +439,36 @@ export default function DashboardPage() {
         <div className="content-grid">
           {/* LEFT COLUMN */}
           <div className="column-main">
+            {assignedLessons.length > 0 && (
+              <section className="block">
+                <div className="block-header">
+                  <div className="block-title">Assigned to you</div>
+                </div>
+                <div className="course-list">
+                  {assignedLessons.map((a) => (
+                    <div key={a.id} className="course-card">
+                      <div className="course-card-main">
+                        <div className="course-title">{a.title}</div>
+                        <div className="course-meta">
+                          {a.course_title ? `Lesson · ${a.course_title}` : "Lesson"}
+                          {a.completed ? " · Completed" : ""}
+                        </div>
+                      </div>
+                      <div>
+                        <button
+                          className={a.completed ? "btn-secondary" : "btn-primary"}
+                          style={{ fontSize: "0.8rem", padding: "6px 12px" }}
+                          onClick={() => router.push(`/lessons/${a.lesson_id}`)}
+                        >
+                          {a.completed ? "Review" : "Start"}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
             <section className="block">
               <div className="block-header">
                 <div className="block-title">In progress</div>

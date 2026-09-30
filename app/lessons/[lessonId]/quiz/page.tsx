@@ -103,6 +103,7 @@ export default function LessonQuizPage() {
   const [error, setError] = useState<string | null>(null);
   const [resultMessage, setResultMessage] = useState<string | null>(null);
   const [passed, setPassed] = useState<boolean | null>(null);
+  const [attemptsUsed, setAttemptsUsed] = useState(0);
 
   // certificate state
   const [certificate, setCertificate] = useState<CertificateRow | null>(null);
@@ -233,6 +234,15 @@ export default function LessonQuizPage() {
       const quizTyped = quizRow as Quiz;
       setQuiz(quizTyped);
 
+      // attempts this user has already made on this quiz
+      const { count: attemptCount, error: attemptCountError } = await supabase
+        .from("quiz_attempts")
+        .select("id", { count: "exact", head: true })
+        .eq("quiz_id", quizTyped.id)
+        .eq("user_id", user.id);
+      if (attemptCountError) throw attemptCountError;
+      setAttemptsUsed(attemptCount ?? 0);
+
       // questions
       const { data: questionRows, error: questionError } = await supabase
         .from("quiz_questions")
@@ -319,12 +329,23 @@ export default function LessonQuizPage() {
   // --------------------------------------------------
   // HANDLERS
   // --------------------------------------------------
-  const handleSelectOption = (questionId: string, optionId: string) => {
+  const outOfAttempts =
+    !!quiz?.max_attempts && attemptsUsed >= quiz.max_attempts;
+
+  const handleSelectOption =(questionId: string, optionId: string) => {
     setSelectedAnswers((prev) => ({ ...prev, [questionId]: optionId }));
   };
 
   const handleSubmit = async () => {
     if (!quiz || !userId || !questions.length) return;
+
+    if (outOfAttempts) {
+      setResultMessage(
+        `You have used all ${quiz.max_attempts} allowed attempts for this quiz. Contact an administrator if you need another attempt.`
+      );
+      setPassed(false);
+      return;
+    }
 
     for (const q of questions) {
       if (!selectedAnswers[q.id]) {
@@ -369,6 +390,8 @@ export default function LessonQuizPage() {
         });
 
       if (attemptError) throw attemptError;
+      const newAttemptsUsed = attemptsUsed + 1;
+      setAttemptsUsed(newAttemptsUsed);
 
       // mark lesson complete if passed
       if (didPass && lessonId) {
@@ -391,7 +414,10 @@ export default function LessonQuizPage() {
       setResultMessage(
         didPass
           ? `You passed! You answered ${correctCount} of ${questions.length} correctly.`
-          : `You scored ${correctCount} of ${questions.length}. You need at least ${passScore} correct to pass.`
+          : `You scored ${correctCount} of ${questions.length}. You need at least ${passScore} correct to pass.` +
+              (quiz.max_attempts
+                ? ` Attempts used: ${newAttemptsUsed} of ${quiz.max_attempts}.`
+                : "")
       );
 
       // prefill certificate inputs when they pass
@@ -598,7 +624,7 @@ export default function LessonQuizPage() {
 
               <button
                 onClick={handleSubmit}
-                disabled={submitting}
+                disabled={submitting || outOfAttempts}
                 style={{
                   marginTop: "8px",
                   padding: "8px 16px",
@@ -608,12 +634,20 @@ export default function LessonQuizPage() {
                   color: "#fff",
                   fontSize: "0.9rem",
                   fontWeight: 600,
-                  cursor: submitting ? "default" : "pointer",
-                  opacity: submitting ? 0.7 : 1,
+                  cursor: submitting || outOfAttempts ? "default" : "pointer",
+                  opacity: submitting || outOfAttempts ? 0.7 : 1,
                 }}
               >
                 {submitting ? "Submitting..." : "Submit quiz"}
               </button>
+
+              {quiz.max_attempts ? (
+                <div style={{ marginTop: "6px", fontSize: "0.8rem", color: "#4b5563" }}>
+                  {outOfAttempts
+                    ? `No attempts remaining (${quiz.max_attempts} allowed). Contact an administrator if you need another attempt.`
+                    : `Attempts used: ${attemptsUsed} of ${quiz.max_attempts}`}
+                </div>
+              ) : null}
 
               {resultMessage && (
                 <div

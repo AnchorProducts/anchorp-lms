@@ -11,6 +11,7 @@ import React, {
 import { useRouter, useParams } from "next/navigation";
 import { supabase } from "../../../../../lib/supabaseClient";
 import AdminSidebar from "../../../../components/AdminSidebar";
+import LessonAssignmentsPanel from "../../../../components/LessonAssignmentsPanel";
 
 type Profile = {
   id: string;
@@ -2145,6 +2146,19 @@ const handleDeleteResource = async (resourceId: string) => {
                 </>
               )}
             </div>
+
+            {/* LESSON ASSIGNMENTS */}
+            {selectedLessonId && (
+              <LessonAssignmentsPanel
+                key={selectedLessonId}
+                courseId={courseId}
+                lessonId={selectedLessonId}
+                lessonTitle={
+                  lessons.find((l) => l.id === selectedLessonId)?.title ?? "this lesson"
+                }
+                adminId={adminProfile?.id ?? null}
+              />
+            )}
           </div>
         </div>
       </div>

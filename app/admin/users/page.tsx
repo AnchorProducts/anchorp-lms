@@ -82,7 +82,7 @@ export default function AdminUsersPage() {
       const { data, error } = await supabase
         .from("profiles")
         .select("id, full_name, email, user_type, role, created_at")
-        .neq("role", "admin")
+        .or("role.is.null,role.neq.admin")
         .order("created_at", { ascending: false });
 
       if (error) {

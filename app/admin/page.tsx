@@ -113,17 +113,17 @@ export default function AdminPage() {
         { count: enrollmentsCount },
         { count: completionsCount },
       ] = await Promise.all([
-        supabase.from("profiles").select("*", { count: "exact", head: true }).neq("role", "admin"),
+        supabase.from("profiles").select("*", { count: "exact", head: true }).or("role.is.null,role.neq.admin"),
         supabase
           .from("profiles")
           .select("*", { count: "exact", head: true })
           .eq("user_type", "internal")
-          .neq("role", "admin"),
+          .or("role.is.null,role.neq.admin"),
         supabase
           .from("profiles")
           .select("*", { count: "exact", head: true })
           .eq("user_type", "external")
-          .neq("role", "admin"),
+          .or("role.is.null,role.neq.admin"),
         supabase.from("courses").select("*", { count: "exact", head: true }),
         supabase.from("course_enrollments").select("*", { count: "exact", head: true }),
         supabase.from("lesson_progress").select("*", { count: "exact", head: true }),
@@ -142,7 +142,7 @@ export default function AdminPage() {
           supabase
             .from("profiles")
             .select("id, full_name, email, user_type, role")
-            .neq("role", "admin"),
+            .or("role.is.null,role.neq.admin"),
           supabase.from("course_enrollments").select("user_id"),
           supabase
             .from("lesson_progress")

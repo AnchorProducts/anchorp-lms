@@ -119,7 +119,7 @@ export default function AdminCoursesPage() {
         const { data, error } = await supabase
           .from("profiles")
           .select("id, full_name, email, user_type, role")
-          .neq("role", "admin")
+          .or("role.is.null,role.neq.admin")
           .order("full_name", { ascending: true });
 
         if (error) throw error;
